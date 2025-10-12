@@ -1,0 +1,72 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/__pycache__/
+backend/app/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+pip-log.txt
+
+# Build outputs
+frontend/.next/
+frontend/out/
+frontend/build/
+backend/dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+backend/fertismart.db
+
+# Logs
+logs/
+*.log
+backend/logs/
+frontend/.next/cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Python specific
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node specific  
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js specific
+.next/
+out/
+
+# Vercel
+.vercel
