@@ -1,9 +1,7 @@
 import Link from 'next/link'
 import { 
   BeakerIcon,
-  EnvelopeIcon,
-  MapPinIcon,
-  PhoneIcon
+  EnvelopeIcon
 } from '@heroicons/react/24/outline'
 
 export function Footer() {
