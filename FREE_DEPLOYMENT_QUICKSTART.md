@@ -33,7 +33,7 @@
 1. Update `vercel.json` with your Render URL
 2. Go to [vercel.com](https://vercel.com) → New Project → Import FertiSmart
 3. Root Directory: `frontend`
-4. Environment Variable: `NEXT_PUBLIC_API_URL=https://your-render-url.onrender.com`
+4. Environment Variable: `NEXT_PUBLIC_API_URL=https://fertismart-backend.onrender.com`
 5. Deploy → Copy your Vercel URL
 
 #### 4. Final Step (1 minute)

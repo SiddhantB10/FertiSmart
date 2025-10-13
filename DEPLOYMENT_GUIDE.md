@@ -62,7 +62,7 @@ DATABASE_URL=postgresql://your-neon-connection-string
      "rewrites": [
        {
          "source": "/api/(.*)",
-         "destination": "https://YOUR-BACKEND-URL.onrender.com/api/$1"
+         "destination": "https://fertismart-backend.onrender.com/api/$1"
        }
      ]
    }
@@ -72,10 +72,10 @@ DATABASE_URL=postgresql://your-neon-connection-string
 1. Go to [vercel.com](https://vercel.com) and sign in
 2. Click "New Project" → "Import Git Repository"
 3. Select your FertiSmart repository
-4. Set **Root Directory** to `frontend`
+4. **DO NOT** set Root Directory (leave empty - deploy from root)
 5. Add environment variable:
    ```
-   NEXT_PUBLIC_API_URL=https://your-backend-url.onrender.com
+   NEXT_PUBLIC_API_URL=https://fertismart-backend.onrender.com
    ```
 6. Click "Deploy"
 
@@ -107,7 +107,7 @@ PORT=auto-set by Render
 
 ### Vercel (Frontend)
 ```
-NEXT_PUBLIC_API_URL=https://your-backend-url.onrender.com
+NEXT_PUBLIC_API_URL=https://fertismart-backend.onrender.com
 ```
 
 ## Free Tier Limitations
