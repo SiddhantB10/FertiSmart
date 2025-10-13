@@ -62,7 +62,7 @@ DATABASE_URL=postgresql://your-neon-connection-string
      "rewrites": [
        {
          "source": "/api/(.*)",
-         "destination": "https://fertismart-backend.onrender.com/api/$1"
+         "destination": "https://fertismart-backend.onrender.com"
        }
      ]
    }
