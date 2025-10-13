@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 CORS(app)
@@ -88,7 +88,7 @@ def load_or_train_model():
             'test_samples': len(X_test),
             'n_crops': len(df['label'].unique()),
             'crops': sorted(df['label'].unique().tolist()),
-            'trained_at': datetime.utcnow().isoformat()
+            'trained_at': datetime.now(timezone.utc).isoformat()
         }
         
         print(f"✓ Trained new Random Forest model - Accuracy: {accuracy*100:.2f}%")
@@ -110,7 +110,7 @@ def health_check():
         'service': 'FertiSmart Crop Recommendation',
         'model': 'Random Forest Classifier',
         'model_loaded': model is not None,
-        'timestamp': datetime.utcnow().isoformat()
+        'timestamp': datetime.now(timezone.utc).isoformat()
     })
 
 @app.route('/api/model/info', methods=['GET'])
@@ -169,8 +169,8 @@ def predict_crop():
             if feature not in data:
                 return jsonify({'error': f'Missing required field: {feature}'}), 400
         
-        # Prepare input
-        input_data = np.array([[
+        # Prepare input as DataFrame to preserve feature names
+        input_df = pd.DataFrame([[
             float(data['N']),
             float(data['P']),
             float(data['K']),
@@ -178,10 +178,10 @@ def predict_crop():
             float(data['humidity']),
             float(data['ph']),
             float(data['rainfall'])
-        ]])
+        ]], columns=feature_names)
         
         # Scale and predict
-        input_scaled = scaler.transform(input_data)
+        input_scaled = scaler.transform(input_df)
         prediction = model.predict(input_scaled)[0]
         probabilities = model.predict_proba(input_scaled)[0]
         
@@ -190,9 +190,9 @@ def predict_crop():
         top_indices = np.argsort(probabilities)[-3:][::-1]
         recommendations = [
             {
-                'crop': classes[i],
+                'crop': str(classes[i]),
                 'confidence': round(float(probabilities[i] * 100), 2),
-                'suitable': probabilities[i] > 0.15
+                'suitable': bool(probabilities[i] > 0.15)
             }
             for i in top_indices
         ]
@@ -206,7 +206,7 @@ def predict_crop():
         
         return jsonify({
             'success': True,
-            'recommended_crop': prediction,
+            'recommended_crop': str(prediction),
             'confidence': round(float(probabilities[top_indices[0]] * 100), 2),
             'top_recommendations': recommendations,
             'input_conditions': data,
@@ -216,7 +216,7 @@ def predict_crop():
                 'importance': round(most_important[1], 4)
             },
             'explanation': explanation,
-            'timestamp': datetime.utcnow().isoformat()
+            'timestamp': datetime.now(timezone.utc).isoformat()
         })
         
     except ValueError as e:
