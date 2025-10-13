@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-import { ApiService } from '@/services/api';
+const API_URL = 'http://localhost:5001';
 
 // Feature name mapping for professional display
 const FEATURE_NAMES: Record<string, string> = {
@@ -81,7 +81,8 @@ export default function CropPredictionPage() {
 
   const fetchModelInfo = async () => {
     try {
-      const data = await ApiService.request('/api/model/info');
+      const response = await fetch(`${API_URL}/api/model/info`);
+      const data = await response.json();
       setModelInfo(data);
     } catch (err) {
       console.error('Failed to fetch model info:', err);
@@ -112,7 +113,15 @@ export default function CropPredictionPage() {
         rainfall: parseFloat(formData.rainfall)
       };
 
-      const data = await ApiService.predictCrop(payload);
+      const response = await fetch(`${API_URL}/api/predict`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
 
       if (data.success) {
         setPredictionResult(data);

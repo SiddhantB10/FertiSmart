@@ -85,7 +85,14 @@ body {
   @apply animate-pulse bg-gray-200 rounded;
 }
 
-/* Removed unused chart containers */
+/* Chart containers */
+.chart-container {
+  @apply w-full h-64 md:h-80 lg:h-96;
+}
+
+.chart-container canvas {
+  @apply w-full h-full;
+}
 
 /* Responsive grid layouts */
 .dashboard-grid {
