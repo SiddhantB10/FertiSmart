@@ -23,7 +23,11 @@ app = Flask(__name__)
 
 # Configure CORS for production
 frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
-CORS(app, origins=[frontend_url, 'https://*.vercel.app'], supports_credentials=True)
+CORS(app, 
+     origins=[frontend_url, 'https://*.vercel.app', 'https://ferti-smart-seven.vercel.app'], 
+     supports_credentials=True,
+     allow_headers=['Content-Type', 'Authorization'],
+     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 
 # Global variables for model and scaler
 model = None
