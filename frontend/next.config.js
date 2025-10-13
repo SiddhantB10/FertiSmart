@@ -1,14 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // App directory is stable in Next.js 15+
   
-  // API configuration
+  // API configuration - proxy to backend in development
   async rewrites() {
+    const backendUrl = process.env.BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:5001/api/:path*', // Updated backend API URL
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },
@@ -16,10 +16,10 @@ const nextConfig = {
   // Environment variables
   env: {
     BACKEND_URL: process.env.BACKEND_URL || 'http://localhost:5001',
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001',
   },
   
-  // Image optimization for Next.js 15+
+  // Image optimization
   images: {
     remotePatterns: [
       {

@@ -21,18 +21,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Configure CORS for production
-frontend_url = os.getenv('FRONTEND_URL', 'https://fertismart.vercel.app')
-# Allow both specific domain and wildcard for Vercel apps
-allowed_origins = [
-    frontend_url,
-    'https://fertismart.vercel.app', 
-    'https://*.vercel.app',
-    'http://localhost:3000'  # for local development
-]
+# Configure CORS - Allow all origins for demonstration purposes
 CORS(app, 
-     origins=allowed_origins, 
-     supports_credentials=True,
+     origins="*",  # Allow all origins
+     supports_credentials=False,  # Disable credentials for security with wildcard
      allow_headers=['Content-Type', 'Authorization', 'Accept'],
      methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 

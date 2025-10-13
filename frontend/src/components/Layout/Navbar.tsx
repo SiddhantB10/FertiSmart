@@ -6,22 +6,13 @@ import { usePathname } from 'next/navigation'
 import { 
   Bars3Icon, 
   XMarkIcon,
-  BeakerIcon,
-  ChartBarIcon,
-  ClipboardDocumentListIcon,
-  CpuChipIcon,
-  DocumentChartBarIcon
+  BeakerIcon
 } from '@heroicons/react/24/outline'
-import { ApiStatus } from '../ApiStatus'
+import { ThemeToggle } from '../ui/ThemeToggle'
 
 const navigation = [
   { name: 'Home', href: '/', icon: BeakerIcon },
-  { name: 'Upload Data', href: '/upload', icon: ClipboardDocumentListIcon },
-  { name: 'Crop Recommendation', href: '/crop-recommendation', icon: BeakerIcon },
-  { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
-  { name: 'Recommendations', href: '/recommendations', icon: CpuChipIcon },
-  { name: 'Clustering', href: '/clustering', icon: DocumentChartBarIcon },
-  { name: 'Schema', href: '/schema', icon: DocumentChartBarIcon },
+  { name: 'Crop Recommendation', href: '/crop-recommendation', icon: BeakerIcon }
 ]
 
 export function Navbar() {
@@ -29,57 +20,57 @@ export function Navbar() {
   const pathname = usePathname()
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-white/95">
+    <nav className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-lg dark:shadow-emerald-500/10 sticky top-0 z-50 border-b-2 border-emerald-100 dark:border-gray-700 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-16 sm:h-18 lg:h-20">
           {/* Logo and brand */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 shadow-lg">
-                <BeakerIcon className="w-5 h-5 text-white" />
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
+              <div className="text-2xl sm:text-3xl lg:text-4xl transform group-hover:scale-110 transition-all duration-300 drop-shadow-lg">
+                🌾
               </div>
-              <span className="text-xl font-bold gradient-text font-display">
+              <span className="text-lg sm:text-xl lg:text-2xl font-bold gradient-text font-display dark:text-white">
                 FertiSmart
               </span>
             </Link>
           </div>
 
           {/* Desktop navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-2">
+          <div className="hidden md:flex md:items-center md:space-x-2 lg:space-x-3">
             {navigation.map((item, index) => {
               const isActive = pathname === item.href
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                  className={`flex items-center space-x-2 px-4 lg:px-6 py-2 lg:py-3 rounded-lg lg:rounded-xl text-sm lg:text-base font-semibold transition-all duration-300 transform hover:scale-105 ${
                     isActive
-                      ? 'bg-gradient-to-r from-green-500 to-blue-500 text-white shadow-lg'
-                      : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-500 text-white shadow-xl shadow-emerald-500/30'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-800/70'
                   }`}
                   style={{
                     animationDelay: `${index * 0.05}s`
                   }}
                 >
-                  <item.icon className={`w-4 h-4 ${isActive ? 'animate-bounce-gentle' : ''}`} />
-                  <span>{item.name}</span>
+                  <item.icon className={`w-4 lg:w-5 h-4 lg:h-5 ${isActive ? 'animate-bounce-gentle' : ''}`} />
+                  <span className="hidden lg:inline">{item.name}</span>
+                  <span className="lg:hidden">{item.name.split(' ')[0]}</span>
                 </Link>
               )
             })}
           </div>
 
-          {/* API Status & Mobile menu button */}
-          <div className="flex items-center space-x-4">
-            <ApiStatus />
+          {/* Theme Toggle & Mobile menu button */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
+            <ThemeToggle />
             <div className="md:hidden">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-lg text-gray-400 hover:text-gray-500 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-green-500 transition-all duration-300 transform hover:scale-110"
-              >
+                className="inline-flex items-center justify-center p-2 sm:p-3 rounded-lg sm:rounded-xl text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500 dark:focus:ring-emerald-400 transition-all duration-300 transform hover:scale-110">
                 {isOpen ? (
-                  <XMarkIcon className="w-6 h-6 animate-scale-in" />
+                  <XMarkIcon className="w-6 sm:w-7 h-6 sm:h-7 animate-scale-in" />
                 ) : (
-                  <Bars3Icon className="w-6 h-6 animate-scale-in" />
+                  <Bars3Icon className="w-6 sm:w-7 h-6 sm:h-7 animate-scale-in" />
                 )}
               </button>
             </div>
@@ -89,8 +80,8 @@ export function Navbar() {
 
       {/* Mobile menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-gray-200 bg-white/95 backdrop-blur-sm animate-slide-up">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+        <div className="md:hidden border-t-2 border-emerald-100 dark:border-gray-700 bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl animate-slide-up shadow-xl">
+          <div className="px-4 pt-4 pb-6 space-y-2">
             {navigation.map((item, index) => {
               const isActive = pathname === item.href
               return (
@@ -98,16 +89,16 @@ export function Navbar() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 transform hover:scale-105 ${
+                  className={`flex items-center space-x-3 px-6 py-4 rounded-xl text-lg font-semibold transition-all duration-300 transform hover:scale-105 ${
                     isActive
-                      ? 'bg-gradient-to-r from-green-500 to-blue-500 text-white shadow-lg'
-                      : 'text-gray-600 hover:text-green-600 hover:bg-green-50'
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-400 dark:to-teal-500 text-white shadow-xl'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-gray-800/70'
                   }`}
                   style={{
                     animationDelay: `${index * 0.05}s`
                   }}
                 >
-                  <item.icon className="w-5 h-5" />
+                  <item.icon className="w-6 h-6" />
                   <span>{item.name}</span>
                 </Link>
               )

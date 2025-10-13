@@ -37,5 +37,5 @@ FertiSmart is a full-stack Data-Driven Soil Analysis and Smart Fertilizer Recomm
 
 ## Running the Project
 - Frontend: `npm run dev` (http://localhost:3000)
-- Backend: `python app.py` (http://localhost:5000)
+- Backend: `python simple_app.py` (http://localhost:5001)
 - Ensure PostgreSQL is running for full functionality

@@ -1,6 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import './responsive.css';
 
 /* Custom fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
@@ -14,6 +15,14 @@
   --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* Dark theme variables */
+.dark {
+  --color-primary: #34d399;
+  --color-secondary: #fbbf24;
+  --color-accent: #60a5fa;
+  --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
 /* Base styles */
 html {
   scroll-behavior: smooth;
@@ -22,8 +31,19 @@ html {
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode styles */
+body:not(.dark) {
   color: #1f2937;
   background-color: #f9fafb;
+}
+
+/* Dark mode styles */
+.dark body {
+  color: #f9fafb;
+  background-color: #0f172a;
 }
 
 /* Custom scrollbar */
@@ -36,15 +56,28 @@ body {
   border-radius: 10px;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, #374151, #4b5563);
+}
+
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #22c55e, #16a34a);
   border-radius: 10px;
   transition: all 0.3s ease;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #34d399, #10b981);
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, #16a34a, #15803d);
   box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #10b981, #059669);
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.5);
 }
 
 /* Custom components */
@@ -171,6 +204,10 @@ body {
   animation: glow 2s ease-in-out infinite;
 }
 
+.animate-bounce-gentle {
+  animation: bounceGentle 2s ease-in-out infinite;
+}
+
 /* Keyframe animations */
 @keyframes fadeIn {
   from {
@@ -244,10 +281,19 @@ body {
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4), 0 0 30px rgba(34, 197, 94, 0.2);
   }
   50% {
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.8);
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.6), 0 0 50px rgba(34, 197, 94, 0.3);
+  }
+}
+
+@keyframes bounceGentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
   }
 }
 
@@ -257,6 +303,46 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.dark .gradient-text {
+  background: linear-gradient(135deg, #34d399 0%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dark mode text improvements */
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #f8fafc !important;
+}
+
+.dark p, .dark span, .dark div {
+  color: #e2e8f0;
+}
+
+.dark .text-gray-600 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-gray-700 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-800 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-gray-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-gray-400 {
+  color: #94a3b8 !important;
 }
 
 /* Glassmorphism effect */

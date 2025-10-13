@@ -11,7 +11,7 @@ interface AlertDescriptionProps {
 }
 
 export const Alert: React.FC<AlertProps> = ({ children, className = '' }) => (
-  <div className={`p-4 rounded-md border ${className}`}>
+  <div className={`p-4 rounded-md border transition-colors ${className}`}>
     {children}
   </div>
 );

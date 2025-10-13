@@ -5,13 +5,14 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
 # Next.js
 .next/
 out/
 build/
 
-# Environment files
+# Environment files (NEVER commit these!)
 .env
 .env.local
 .env.development.local
@@ -21,10 +22,24 @@ build/
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # OS
 .DS_Store
 *.tsbuildinfo
+Thumbs.db
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.DS_Store
+*.pem

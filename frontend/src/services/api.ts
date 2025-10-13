@@ -1,6 +1,6 @@
 // API service for connecting to FertiSmart backend
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
-  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:5001')
+  (process.env.NODE_ENV === 'production' ? 'https://fertismart-backend.onrender.com' : 'http://localhost:5001')
 
 // Type definitions for API responses
 export interface HealthCheckResponse {
@@ -40,12 +40,15 @@ export class ApiService {
       const data = await response.json()
       
       if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`)
+        throw new Error(data.message || data.error || `HTTP error! status: ${response.status}`)
       }
       
       return data
     } catch (error) {
-      console.error(`API request failed for ${endpoint}:`, error)
+      // Only log in development mode
+      if (process.env.NODE_ENV === 'development') {
+        console.error(`API request failed for ${endpoint}:`, error)
+      }
       throw error
     }
   }

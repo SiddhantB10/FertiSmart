@@ -18,7 +18,9 @@ export function ApiStatus() {
       setApiInfo(response)
       setStatus('connected')
     } catch (error) {
-      console.error('API connection failed:', error)
+      if (process.env.NODE_ENV === 'development') {
+        console.error('API connection failed:', error)
+      }
       setStatus('error')
     }
   }
