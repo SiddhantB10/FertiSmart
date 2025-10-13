@@ -69,7 +69,7 @@ export class ApiService {
     return this.request('/api/clustering/results')
   }
 
-  static async analyzeCluster(data: any) {
+  static async analyzeCluster(data: Record<string, unknown>) {
     return this.request('/api/clustering/analyze', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -81,7 +81,7 @@ export class ApiService {
     return this.request('/api/recommendations/history')
   }
 
-  static async generateRecommendations(filters: any) {
+  static async generateRecommendations(filters: Record<string, unknown>) {
     return this.request('/api/recommendations/generate', {
       method: 'POST',
       body: JSON.stringify({ filters }),
@@ -89,14 +89,14 @@ export class ApiService {
   }
 
   // Classification endpoints
-  static async trainModel(data: any) {
+  static async trainModel(data: Record<string, unknown>) {
     return this.request('/api/classification/train', {
       method: 'POST',
       body: JSON.stringify(data),
     })
   }
 
-  static async makePrediction(features: any) {
+  static async makePrediction(features: Record<string, unknown>) {
     return this.request('/api/classification/predict', {
       method: 'POST',
       body: JSON.stringify({ features }),
@@ -118,7 +118,7 @@ export class ApiService {
   }
 
   // Preprocessing endpoints
-  static async uploadSoilData(data: any) {
+  static async uploadSoilData(data: Record<string, unknown>) {
     return this.request('/api/preprocessing/upload', {
       method: 'POST',
       body: JSON.stringify(data),

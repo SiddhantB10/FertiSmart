@@ -5,7 +5,7 @@ import { ApiService } from '../services/api'
 
 export function ApiStatus() {
   const [status, setStatus] = useState<'checking' | 'connected' | 'error'>('checking')
-  const [apiInfo, setApiInfo] = useState<any>(null)
+  const [apiInfo, setApiInfo] = useState<{ status?: string; message?: string; timestamp?: string; version?: string } | null>(null)
 
   useEffect(() => {
     checkApiConnection()

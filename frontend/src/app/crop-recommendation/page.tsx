@@ -72,8 +72,8 @@ const CropRecommendationPage: React.FC = () => {
 
   const checkModelStatus = async () => {
     try {
-      const response = await api.get('/crop-prediction');
-      setModelInfo(response.data);
+      const response = await api.request('/api/model/info');
+      setModelInfo(response);
     } catch (err) {
       console.error('Error checking model status:', err);
     }
@@ -83,13 +83,14 @@ const CropRecommendationPage: React.FC = () => {
     setTraining(true);
     setError(null);
     try {
-      const response = await api.post('/crop-recommendation');
+      await api.trainCropModel();
       setModelInfo({ ...modelInfo, model_trained: true });
       setError(null);
       // Refresh model status
       await checkModelStatus();
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to train model');
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { error?: string } } };
+      setError(error.response?.data?.error || 'Failed to train model');
     } finally {
       setTraining(false);
     }
@@ -106,10 +107,11 @@ const CropRecommendationPage: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await api.post('/crop-prediction', soilData);
-      setPrediction(response.data.prediction);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Prediction failed');
+      const response = await api.predictCrop(soilData);
+      setPrediction(response.prediction);
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { error?: string } } };
+      setError(error.response?.data?.error || 'Prediction failed');
       setPrediction(null);
     } finally {
       setLoading(false);

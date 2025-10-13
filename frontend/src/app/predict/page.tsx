@@ -128,7 +128,7 @@ export default function CropPredictionPage() {
       } else {
         setError(data.error || 'Prediction failed');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to connect to the server. Please ensure the backend is running.');
     } finally {
       setLoading(false);
@@ -243,7 +243,7 @@ export default function CropPredictionPage() {
                 <span className="animate-bounce-gentle">📝</span> Input Parameters
               </CardTitle>
               <p className="text-sm text-blue-100 mt-2">
-                Enter your field's soil and climate data for accurate prediction
+                Enter your field&apos;s soil and climate data for accurate prediction
               </p>
             </CardHeader>
             <CardContent className="pt-6">
