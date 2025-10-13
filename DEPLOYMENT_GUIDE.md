@@ -39,7 +39,7 @@ In Render dashboard, add these environment variables:
 ```
 FLASK_ENV=production
 SECRET_KEY=your-super-secret-key-change-this
-FRONTEND_URL=https://your-app-name.vercel.app
+FRONTEND_URL=https://fertismart.vercel.app
 DEBUG=False
 LOG_LEVEL=INFO
 DATABASE_URL=postgresql://your-neon-connection-string
@@ -83,7 +83,7 @@ DATABASE_URL=postgresql://your-neon-connection-string
 1. Go back to Render dashboard
 2. Update the `FRONTEND_URL` environment variable with your actual Vercel URL:
    ```
-   FRONTEND_URL=https://your-app-name.vercel.app
+   FRONTEND_URL=https://fertismart.vercel.app
    ```
 3. Redeploy the backend service
 
@@ -99,7 +99,7 @@ DATABASE_URL=postgresql://your-neon-connection-string
 ```
 FLASK_ENV=production
 SECRET_KEY=your-super-secret-key
-FRONTEND_URL=https://your-app-name.vercel.app
+FRONTEND_URL=https://fertismart.vercel.app
 DEBUG=False
 DATABASE_URL=postgresql://your-neon-connection-string
 PORT=auto-set by Render

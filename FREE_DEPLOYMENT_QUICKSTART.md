@@ -25,7 +25,7 @@
    DATABASE_URL=your-neon-connection-string
    FLASK_ENV=production
    SECRET_KEY=any-random-string-here
-   FRONTEND_URL=https://your-app.vercel.app
+   FRONTEND_URL=https://fertismart.vercel.app
    ```
 5. Deploy → Copy your Render URL
 
