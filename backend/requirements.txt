@@ -1,42 +1,16 @@
-# FertiSmart Backend Requirements - Production Ready (Updated 2025)
-# Core Flask Framework (Python 3.13 compatible)
+# FertiSmart Backend Requirements - Optimized Production Ready
+# Core Flask Framework
 Flask==3.1.0
-Flask-SQLAlchemy==3.1.0
 Flask-CORS==6.0.0
-Flask-Migrate==4.1.0
-Flask-RESTful==0.3.10
 
 # Environment and Configuration
 python-dotenv==1.1.0
-Werkzeug==3.1.0
 
-# Database Support (Updated for better compatibility)
-SQLAlchemy==2.0.44
-# PostgreSQL (production)
-psycopg2-binary==2.9.11
-
-# Data Science Libraries (Python 3.13 compatible - using current versions)
+# Data Science Libraries (Essential only)
 numpy>=2.0.0
 pandas>=2.1.0
-scipy>=1.11.0
 scikit-learn>=1.3.0
-matplotlib>=3.7.0
-plotly>=5.15.0
-
-# Utilities (Updated)
-requests>=2.32.3
 joblib>=1.4.0,<2.0.0
-pytest==8.3.0
-pytest-flask==1.3.0
-black==24.10.0
-flake8==7.1.0
 
-# Production Server (Updated)
+# Production Server
 gunicorn==23.0.0
-
-# Logging & Monitoring (Updated)
-loguru==0.7.3
-
-# Additional security and performance
-cryptography>=43.0.0
-urllib3>=2.2.0,<3.0.0
