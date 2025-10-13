@@ -14,9 +14,16 @@ from sklearn.metrics import accuracy_score, classification_report
 import joblib
 import os
 from datetime import datetime, timezone
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS for production
+frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+CORS(app, origins=[frontend_url, 'https://*.vercel.app'], supports_credentials=True)
 
 # Global variables for model and scaler
 model = None
@@ -296,5 +303,18 @@ if __name__ == '__main__':
     print("🤖 Random Forest Classifier")
     print("=" * 60)
     
-    port = int(os.environ.get('PORT', 5001))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    print("🔄 Initializing system...")
+    if load_or_train_model():
+        print("✅ System ready!")
+        print(f"📊 Model accuracy: {model_info.get('accuracy', 'N/A')}%")
+        print(f"🌾 Crops supported: {model_info.get('n_crops', 'N/A')}")
+        print("🚀 Starting Flask server...")
+        print("=" * 60)
+        
+        # Use PORT from environment (Railway sets this) or default to 5001
+        port = int(os.getenv('PORT', 5001))
+        debug = os.getenv('FLASK_ENV', 'development') == 'development'
+        app.run(debug=debug, host='0.0.0.0', port=port)
+    else:
+        print("❌ Failed to initialize system")
+        print("Please check your data files and try again.")
