@@ -167,60 +167,57 @@ class AnalyticsAPI(Resource):
 # =============================================================================
 
 class ClassificationAPI(Resource):
-    """Machine Learning Classification Endpoints"""
+    """Random Forest Classification for Crop Recommendation"""
     
     def post(self):
-        """Train classification models"""
+        """Train Random Forest crop recommendation model"""
         try:
-            data = request.get_json()
-            model_type = data.get('model_type', 'decision_tree')
-            target = data.get('target', 'crop')  # crop or fertilizer
-            
             classification_service = ClassificationService()
+            result = classification_service.train_crop_recommendation_model()
             
-            if model_type == 'decision_tree':
-                result = classification_service.train_decision_tree(target)
-            elif model_type == 'naive_bayes':
-                result = classification_service.train_naive_bayes(target)
-            elif model_type == 'both':
-                dt_result = classification_service.train_decision_tree(target)
-                nb_result = classification_service.train_naive_bayes(target)
-                result = {
-                    'decision_tree': dt_result,
-                    'naive_bayes': nb_result
-                }
-            else:
-                return {'error': 'Invalid model type'}, 400
-            
-            return result, 200
+            return {
+                'message': 'Random Forest crop recommendation model trained successfully',
+                'model_info': result,
+                'timestamp': datetime.utcnow().isoformat()
+            }, 200
             
         except Exception as e:
             return {'error': str(e)}, 500
     
     def get(self):
-        """Get classification results and model performance"""
+        """Get Random Forest model information and performance"""
         try:
-            # Get latest model predictions
-            predictions = ModelPrediction.query.order_by(
-                ModelPrediction.created_at.desc()
-            ).limit(10).all()
+            # Check if model exists
+            model_path = os.path.join('trained_models', 'crop_recommendation_rf.pkl')
             
-            result = []
-            for pred in predictions:
-                result.append({
-                    'id': pred.id,
-                    'model_name': pred.model_name,
-                    'predicted_crop': pred.predicted_crop,
-                    'predicted_fertilizer': pred.predicted_fertilizer,
-                    'confidence_score': pred.confidence_score,
-                    'accuracy': pred.accuracy,
-                    'precision': pred.precision,
-                    'recall': pred.recall,
-                    'f1_score': pred.f1_score,
-                    'created_at': pred.created_at.isoformat()
-                })
+            if not os.path.exists(model_path):
+                return {
+                    'message': 'Random Forest model not found. Please train the model first.',
+                    'model_trained': False
+                }, 404
             
-            return {'predictions': result}, 200
+            # Load model info
+            import joblib
+            model = joblib.load(model_path)
+            
+            # Get sample data for demonstration
+            df = pd.read_csv('Crop_recommendation.csv')
+            sample_data = df.sample(5).to_dict('records')
+            
+            return {
+                'message': 'Random Forest crop recommendation model is ready',
+                'model_trained': True,
+                'model_info': {
+                    'algorithm': 'Random Forest Classifier',
+                    'n_estimators': model.n_estimators,
+                    'max_depth': model.max_depth,
+                    'available_crops': sorted(model.classes_.tolist()),
+                    'total_crops': len(model.classes_),
+                    'feature_names': ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
+                },
+                'sample_data': sample_data,
+                'timestamp': datetime.utcnow().isoformat()
+            }, 200
             
         except Exception as e:
             return {'error': str(e)}, 500
@@ -296,7 +293,175 @@ class ClusteringAPI(Resource):
             return {'error': str(e)}, 500
 
 # =============================================================================
-# RECOMMENDATION ENGINE
+# CROP RECOMMENDATION ENGINE
+# =============================================================================
+
+class CropRecommendationAPI(Resource):
+    """Smart Crop Recommendation using Random Forest"""
+    
+    def post(self):
+        """Train the Random Forest crop recommendation model"""
+        try:
+            classification_service = ClassificationService()
+            result = classification_service.train_crop_recommendation_model()
+            
+            return {
+                'message': 'Crop recommendation model trained successfully',
+                'model_info': result,
+                'timestamp': datetime.utcnow().isoformat()
+            }, 200
+            
+        except Exception as e:
+            return {'error': str(e)}, 500
+    
+    def get(self):
+        """Get model information and sample predictions"""
+        try:
+            # Check if model exists
+            import os
+            model_path = os.path.join('trained_models', 'crop_recommendation_rf.pkl')
+            
+            if not os.path.exists(model_path):
+                return {
+                    'message': 'Crop recommendation model not found. Please train the model first.',
+                    'model_trained': False
+                }, 404
+            
+            # Load model info
+            import joblib
+            model = joblib.load(model_path)
+            
+            # Get sample data for demonstration
+            import pandas as pd
+            df = pd.read_csv('Crop_recommendation.csv')
+            sample_data = df.sample(5).to_dict('records')
+            
+            return {
+                'message': 'Crop recommendation model is ready',
+                'model_trained': True,
+                'model_info': {
+                    'algorithm': 'Random Forest Classifier',
+                    'n_estimators': model.n_estimators,
+                    'max_depth': model.max_depth,
+                    'available_crops': sorted(model.classes_.tolist()),
+                    'total_crops': len(model.classes_),
+                    'feature_names': ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
+                },
+                'sample_data': sample_data,
+                'timestamp': datetime.utcnow().isoformat()
+            }, 200
+            
+        except Exception as e:
+            return {'error': str(e)}, 500
+
+class CropPredictionAPI(Resource):
+    """Predict suitable crop based on soil and climate conditions"""
+    
+    def post(self):
+        """Predict the most suitable crop for given conditions"""
+        try:
+            data = request.get_json()
+            
+            # Validate input data
+            required_fields = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
+            for field in required_fields:
+                if field not in data:
+                    return {'error': f'Missing required field: {field}'}, 400
+                
+                # Validate that values are numeric
+                try:
+                    float(data[field])
+                except (ValueError, TypeError):
+                    return {'error': f'Invalid value for {field}. Must be a number.'}, 400
+            
+            # Make prediction
+            classification_service = ClassificationService()
+            prediction_result = classification_service.predict_crop(data)
+            
+            return {
+                'success': True,
+                'prediction': prediction_result,
+                'timestamp': datetime.utcnow().isoformat()
+            }, 200
+            
+        except FileNotFoundError:
+            return {
+                'error': 'Crop recommendation model not found. Please train the model first.',
+                'suggestion': 'Use POST /api/crop-recommendation to train the model'
+            }, 404
+        except Exception as e:
+            return {'error': str(e)}, 500
+    
+    def get(self):
+        """Get sample input format and available crops"""
+        try:
+            # Check if model exists
+            import os
+            model_path = os.path.join('trained_models', 'crop_recommendation_rf.pkl')
+            
+            if os.path.exists(model_path):
+                import joblib
+                model = joblib.load(model_path)
+                available_crops = sorted(model.classes_.tolist())
+            else:
+                available_crops = []
+            
+            # Get sample data ranges from CSV
+            import pandas as pd
+            df = pd.read_csv('Crop_recommendation.csv')
+            
+            feature_ranges = {}
+            for col in ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']:
+                feature_ranges[col] = {
+                    'min': float(df[col].min()),
+                    'max': float(df[col].max()),
+                    'mean': float(df[col].mean()),
+                    'description': self._get_feature_description(col)
+                }
+            
+            return {
+                'input_format': {
+                    'N': 'Nitrogen content (0-100)',
+                    'P': 'Phosphorus content (0-80)',
+                    'K': 'Potassium content (0-80)',
+                    'temperature': 'Temperature in Celsius (10-40)',
+                    'humidity': 'Humidity percentage (30-100)',
+                    'ph': 'Soil pH level (4-9)',
+                    'rainfall': 'Rainfall in mm (50-300)'
+                },
+                'feature_ranges': feature_ranges,
+                'available_crops': available_crops,
+                'total_crops': len(available_crops),
+                'sample_input': {
+                    'N': 90,
+                    'P': 42,
+                    'K': 43,
+                    'temperature': 20.8,
+                    'humidity': 82.0,
+                    'ph': 6.5,
+                    'rainfall': 202.9
+                },
+                'model_ready': len(available_crops) > 0
+            }, 200
+            
+        except Exception as e:
+            return {'error': str(e)}, 500
+    
+    def _get_feature_description(self, feature):
+        """Get description for each feature"""
+        descriptions = {
+            'N': 'Nitrogen (N) - Essential for leaf growth and green color',
+            'P': 'Phosphorus (P) - Important for root development and flowering',
+            'K': 'Potassium (K) - Crucial for fruit development and disease resistance',
+            'temperature': 'Average temperature - Affects plant growth and development',
+            'humidity': 'Relative humidity - Influences water availability and disease risk',
+            'ph': 'Soil pH - Determines nutrient availability to plants',
+            'rainfall': 'Annual rainfall - Primary source of water for crops'
+        }
+        return descriptions.get(feature, f'{feature} - Agricultural parameter')
+
+# =============================================================================
+# FERTILIZER RECOMMENDATION ENGINE
 # =============================================================================
 
 class RecommendationAPI(Resource):
@@ -387,6 +552,8 @@ api.add_resource(VisualizationAPI, '/visualize')
 api.add_resource(AnalyticsAPI, '/analytics')
 api.add_resource(ClassificationAPI, '/classify')
 api.add_resource(ClusteringAPI, '/cluster')
+api.add_resource(CropRecommendationAPI, '/crop-recommendation')
+api.add_resource(CropPredictionAPI, '/crop-prediction')
 api.add_resource(RecommendationAPI, '/recommend')
 api.add_resource(SchemaAPI, '/schema')
 

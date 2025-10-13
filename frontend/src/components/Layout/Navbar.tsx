@@ -17,6 +17,7 @@ import { ApiStatus } from '../ApiStatus'
 const navigation = [
   { name: 'Home', href: '/', icon: BeakerIcon },
   { name: 'Upload Data', href: '/upload', icon: ClipboardDocumentListIcon },
+  { name: 'Crop Recommendation', href: '/crop-recommendation', icon: BeakerIcon },
   { name: 'Analytics', href: '/analytics', icon: ChartBarIcon },
   { name: 'Recommendations', href: '/recommendations', icon: CpuChipIcon },
   { name: 'Clustering', href: '/clustering', icon: DocumentChartBarIcon },

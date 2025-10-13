@@ -127,4 +127,29 @@ export class ApiService {
   static async getQualityReport() {
     return this.request('/api/preprocessing/quality-report')
   }
+
+  // Crop Recommendation endpoints
+  static async trainCropModel() {
+    return this.request('/api/crop-recommendation/train', {
+      method: 'POST',
+    })
+  }
+
+  static async predictCrop(soilClimateData: {
+    N: number;
+    P: number;
+    K: number;
+    temperature: number;
+    humidity: number;
+    ph: number;
+    rainfall: number;
+  }) {
+    return this.request('/api/crop-recommendation/predict', {
+      method: 'POST',
+      body: JSON.stringify(soilClimateData),
+    })
+  }
 }
+
+// Default export
+export default ApiService

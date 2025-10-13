@@ -457,6 +457,95 @@ def create_app():
         except Exception as e:
             app.logger.error(f'Visualization charts error: {e}')
             return jsonify({'success': False, 'error': str(e)}), 500
+
+    # Crop Recommendation Endpoints
+    @app.route('/api/crop-recommendation/train', methods=['POST'])
+    def train_crop_model():
+        try:
+            from app.services.classification_service import ClassificationService
+            service = ClassificationService()
+            result = service.train_crop_recommendation_model()
+            return jsonify({
+                'success': True,
+                'training_result': result,
+                'message': 'Random Forest crop recommendation model trained successfully!'
+            }), 200
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+    @app.route('/api/crop-recommendation/predict', methods=['POST'])
+    def predict_crop():
+        try:
+            data = request.get_json()
+            if not data:
+                return jsonify({'error': 'No data provided'}), 400
+                
+            # Validate required fields
+            required_fields = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
+            for field in required_fields:
+                if field not in data:
+                    return jsonify({'error': f'Missing required field: {field}'}), 400
+            
+            from app.services.classification_service import ClassificationService
+            service = ClassificationService()
+            result = service.predict_crop(data)
+            
+            return jsonify({
+                'success': True,
+                'prediction': result
+            }), 200
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 500
+
+    @app.route('/api/crop-recommendation', methods=['GET'])
+    def crop_recommendation_info():
+        try:
+            # Get sample input format and feature information
+            import pandas as pd
+            import os
+            
+            df = pd.read_csv('Crop_recommendation.csv')
+            
+            feature_info = {}
+            for col in ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']:
+                feature_info[col] = {
+                    'min': float(df[col].min()),
+                    'max': float(df[col].max()),
+                    'mean': round(float(df[col].mean()), 2),
+                    'description': get_feature_description(col)
+                }
+            
+            # Check if model exists
+            model_path = os.path.join('trained_models', 'crop_recommendation_rf.pkl')
+            model_exists = os.path.exists(model_path)
+            
+            available_crops = []
+            if model_exists:
+                import joblib
+                model = joblib.load(model_path)
+                available_crops = sorted(model.classes_.tolist())
+            
+            return jsonify({
+                'success': True,
+                'model_info': {
+                    'algorithm': 'Random Forest',
+                    'purpose': 'Crop Recommendation based on Soil and Climate Conditions',
+                    'model_trained': model_exists,
+                    'available_crops': available_crops,
+                    'total_crops': len(available_crops) if available_crops else len(df['label'].unique())
+                },
+                'input_format': {
+                    'required_fields': ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall'],
+                    'feature_ranges': feature_info
+                },
+                'sample_input': {
+                    'N': 90, 'P': 42, 'K': 43,
+                    'temperature': 20.8, 'humidity': 82.0,
+                    'ph': 6.5, 'rainfall': 202.9
+                }
+            }), 200
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)}), 500
     
     @app.route('/api/database/schema', methods=['GET'])
     def database_schema():
@@ -506,6 +595,19 @@ def create_app():
         init_database()
     
     return app
+
+def get_feature_description(feature):
+    """Get description for soil/climate features"""
+    descriptions = {
+        'N': 'Nitrogen content in soil (kg/ha)',
+        'P': 'Phosphorus content in soil (kg/ha)',
+        'K': 'Potassium content in soil (kg/ha)',
+        'temperature': 'Temperature in Celsius',
+        'humidity': 'Relative humidity (%)',
+        'ph': 'Soil pH value',
+        'rainfall': 'Rainfall in mm'
+    }
+    return descriptions.get(feature, f'{feature} value')
 
 if __name__ == '__main__':
     app = create_app()
