@@ -1,6 +1,6 @@
 # 🌾 FertiSmart - AI-Powered Crop Recommendation System
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/yourusername/fertismart)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/SiddhantB10/FertiSmart)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-green)](https://fertismart.vercel.app/)
 [![Backend API](https://img.shields.io/badge/API-Live-blue)](https://fertismart-backend.onrender.com)
 
@@ -8,10 +8,16 @@
 
 FertiSmart is an intelligent crop recommendation system that leverages machine learning to help farmers make data-driven decisions about crop selection. Using advanced Random Forest algorithms, the system analyzes soil conditions and environmental factors to provide accurate crop recommendations with confidence scores.
 
+## 📚 Documentation
+
+- **[API Documentation](./API_DOCUMENTATION.md)** - Complete API reference and endpoints
+- **[Deployment Guide](./DEPLOYMENT.md)** - Step-by-step deployment instructions
+- **[GitHub Copilot Instructions](./.github/copilot-instructions.md)** - Development guidelines
+
 ### ✨ Key Features
 
-- 🤖 **AI-Powered Predictions**: Random Forest ML algorithm with 95%+ accuracy
-- 🌱 **22 Crop Support**: Comprehensive database of agricultural crops
+- 🤖 **AI-Powered Predictions**: Random Forest ML algorithm with 97.32% accuracy
+- 🌱 **37 Crop Support**: Comprehensive dataset of agricultural crops
 - 📱 **Fully Responsive**: Optimized for mobile, tablet, and desktop devices
 - 🎨 **Modern UI**: Clean, professional interface with dark/light theme support
 - ⚡ **Real-time Analysis**: Instant crop recommendations with confidence scores
@@ -30,15 +36,15 @@ FertiSmart is an intelligent crop recommendation system that leverages machine l
 - **Framework**: Flask (Python)
 - **ML Library**: scikit-learn (Random Forest)
 - **Data Processing**: pandas, numpy
-- **Database**: PostgreSQL (Neon)
+- **Data Storage**: CSV-based dataset
 - **Deployment**: Render
 
 ### Machine Learning
 - **Algorithm**: Random Forest Classifier
 - **Features**: 7 input parameters (N, P, K, Temperature, Humidity, pH, Rainfall)
-- **Training Data**: 2,200+ crop samples
-- **Accuracy**: 95%+ prediction accuracy
-- **Supported Crops**: 22 different agricultural crops
+- **Training Data**: 55,500+ crop samples
+- **Accuracy**: 97.32% prediction accuracy
+- **Supported Crops**: 37 different agricultural crops
 
 ## 🌐 Live Demo
 
@@ -50,14 +56,13 @@ FertiSmart is an intelligent crop recommendation system that leverages machine l
 
 - Node.js 18+ and npm
 - Python 3.8+
-- PostgreSQL database (optional for local development)
 
 ## 🔧 Local Development Setup
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/fertismart.git
-cd fertismart
+git clone https://github.com/SiddhantB10/FertiSmart.git
+cd FertiSmart
 ```
 
 ### 2. Frontend Setup
@@ -83,10 +88,10 @@ Create `.env.local` in the frontend directory:
 NEXT_PUBLIC_API_URL=http://localhost:5001
 ```
 
-Create `.env` in the backend directory:
+Create `.env` in the backend directory (optional):
 ```env
-DATABASE_URL=your_postgresql_connection_string
 FLASK_ENV=development
+PORT=5001
 ```
 
 ## 🎯 How to Use
@@ -184,13 +189,9 @@ FertiSmart is fully optimized for all devices:
 
 ### Backend (Render)
 1. Connect your GitHub repository to Render
-2. Set up environment variables for database connection
+2. Set up environment variables (PORT, FLASK_ENV)
 3. Deploy with automatic builds
-
-### Database (Neon)
-- PostgreSQL database with SSL enabled
-- Connection pooling for optimal performance
-- Automatic backups and monitoring
+4. Model auto-trains from CSV dataset on first startup
 
 ## 🤝 Contributing
 
@@ -206,10 +207,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Developer
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+**Siddh** ant
+- GitHub: [@SiddhantB10](https://github.com/SiddhantB10)
+- Project: [FertiSmart](https://github.com/SiddhantB10/FertiSmart)
 
 ## 🙏 Acknowledgments
 
@@ -220,9 +220,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 If you have any questions or need support, please:
-1. Check the [Issues](https://github.com/yourusername/fertismart/issues) page
-2. Create a new issue with detailed information
-3. Contact the developer directly
+1. Check the [API Documentation](./API_DOCUMENTATION.md)
+2. Review the [Deployment Guide](./DEPLOYMENT.md)
+3. Check the [Issues](https://github.com/SiddhantB10/FertiSmart/issues) page
+4. Create a new issue with detailed information
 
 ---
 

@@ -23,11 +23,9 @@ backend/dist/
 .env.production.local
 backend/.env
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
-backend/fertismart.db
+# ML Models (large files, regenerated on startup)
+backend/*.pkl
+*.pkl
 
 # Logs
 logs/

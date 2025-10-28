@@ -66,6 +66,7 @@ interface PredictionResult {
 export default function CropPredictionPage() {
   const [modelInfo, setModelInfo] = useState<ModelInfo>({});
   const [loading, setLoading] = useState(false);
+  const [warming, setWarming] = useState(false);
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
   const [error, setError] = useState('');
   
@@ -81,12 +82,31 @@ export default function CropPredictionPage() {
 
   useEffect(() => {
     fetchModelInfo();
+    // Warm up the backend when page loads
+    warmUpBackend();
   }, []);
+
+  const warmUpBackend = async () => {
+    try {
+      setWarming(true);
+      // Ping the health endpoint to wake up Render
+      await fetch(`${API_URL}/api/health`, { 
+        method: 'GET',
+        signal: AbortSignal.timeout(15000) // 15 second timeout
+      });
+    } catch (err) {
+      console.warn('Backend warm-up failed:', err);
+    } finally {
+      setTimeout(() => setWarming(false), 1000);
+    }
+  };
 
   const fetchModelInfo = async () => {
     try {
       console.log('Fetching model info from:', `${API_URL}/api/model/info`);
-      const response = await fetch(`${API_URL}/api/model/info`);
+      const response = await fetch(`${API_URL}/api/model/info`, {
+        signal: AbortSignal.timeout(15000)
+      });
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -143,7 +163,8 @@ export default function CropPredictionPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(30000) // 30 second timeout for first request
       });
 
       console.log('Response status:', response.status);
@@ -231,6 +252,19 @@ export default function CropPredictionPage() {
           </Alert>
         )}
 
+        {/* Backend Warming Indicator */}
+        {warming && (
+          <Alert className="mb-8 border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+            <AlertDescription className="text-blue-700 dark:text-blue-300 font-medium flex items-center gap-2">
+              <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              🚀 Waking up backend server... This may take a few seconds on first load.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Model Info */}
         {modelInfo.accuracy && (
           <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-2xl dark:shadow-emerald-500/20 p-6 mb-8 border border-emerald-200 dark:border-emerald-700 animate-slide-in-left hover:scale-105 transition-all duration-300">
@@ -241,20 +275,20 @@ export default function CropPredictionPage() {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-emerald-600 dark:text-emerald-400">Model Performance</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Trained on 2,200+ crop samples</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Trained on 55,500+ crop samples</p>
                 </div>
               </div>
               <div className="flex gap-6">
                 <div className="text-center group bg-gradient-to-br from-emerald-500 to-emerald-600 dark:from-emerald-400 dark:to-emerald-500 rounded-2xl p-6 hover:from-emerald-400 hover:to-emerald-500 dark:hover:from-emerald-300 dark:hover:to-emerald-400 transition-all duration-300 shadow-lg dark:shadow-emerald-400/20 min-w-[120px]">
                   <div className="text-4xl font-bold text-white dark:text-gray-900 transform group-hover:scale-110 transition-transform duration-300">
-                    {modelInfo.accuracy || '95+'}%
+                    {modelInfo.accuracy || '97.32'}%
                   </div>
                   <div className="text-sm text-emerald-100 dark:text-gray-800 font-medium mt-1">Model Accuracy</div>
                 </div>
                 <div className="w-px bg-gradient-to-b from-transparent via-emerald-400 dark:via-emerald-300 to-transparent"></div>
                 <div className="text-center group bg-gradient-to-br from-teal-500 to-teal-600 dark:from-teal-400 dark:to-teal-500 rounded-2xl p-6 hover:from-teal-400 hover:to-teal-500 dark:hover:from-teal-300 dark:hover:to-teal-400 transition-all duration-300 shadow-lg dark:shadow-teal-400/20 min-w-[120px]">
                   <div className="text-4xl font-bold text-white dark:text-gray-900 transform group-hover:scale-110 transition-transform duration-300">
-                    {modelInfo.n_crops || '22'}
+                    {modelInfo.n_crops || '37'}
                   </div>
                   <div className="text-sm text-teal-100 dark:text-gray-800 font-medium mt-1">Crops Supported</div>
                 </div>
@@ -416,7 +450,11 @@ export default function CropPredictionPage() {
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
-                      <span className="animate-spin">🔄</span> Analyzing...
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      <span>Analyzing soil conditions...</span>
                     </span>
                   ) : (
                     <span className="flex items-center justify-center gap-2">

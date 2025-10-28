@@ -24,8 +24,43 @@ export interface DashboardData {
 }
 
 export class ApiService {
+  // Cache for the wake-up status
+  private static isWakingUp = false;
+  private static lastPingTime = 0;
+  private static PING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+  // Wake up the backend if it's sleeping (Render free tier)
+  static async wakeUpBackend(): Promise<boolean> {
+    const now = Date.now();
+    
+    // If we recently pinged, skip
+    if (now - this.lastPingTime < this.PING_INTERVAL) {
+      return true;
+    }
+
+    try {
+      this.isWakingUp = true;
+      const response = await fetch(`${API_BASE_URL}/api/health`, {
+        method: 'GET',
+        signal: AbortSignal.timeout(30000), // 30 second timeout
+      });
+      this.lastPingTime = now;
+      this.isWakingUp = false;
+      return response.ok;
+    } catch (error) {
+      this.isWakingUp = false;
+      console.warn('Backend wake-up failed:', error);
+      return false;
+    }
+  }
+
   static async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`
+    
+    // For critical endpoints, wake up backend first
+    if (endpoint.includes('/predict') || endpoint.includes('/recommend')) {
+      await this.wakeUpBackend();
+    }
     
     const config: RequestInit = {
       headers: {
