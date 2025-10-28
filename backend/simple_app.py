@@ -112,6 +112,41 @@ def load_or_train_model():
 # Initialize model on startup
 load_or_train_model()
 
+def calculate_prediction_importance(input_df, input_scaled, predicted_crop):
+    """
+    Calculate feature importance specific to this prediction
+    by measuring how much each feature contributes to the predicted crop
+    """
+    # Get baseline prediction probabilities
+    baseline_proba = model.predict_proba(input_scaled)[0]
+    predicted_class_idx = np.where(model.classes_ == predicted_crop)[0][0]
+    baseline_score = baseline_proba[predicted_class_idx]
+    
+    # Calculate importance by perturbing each feature
+    importance_scores = {}
+    
+    for i, feature in enumerate(feature_names):
+        # Create a copy of input
+        perturbed_input = input_scaled.copy()
+        
+        # Set feature to neutral value (mean = 0 after scaling)
+        perturbed_input[0, i] = 0
+        
+        # Get new prediction probability
+        perturbed_proba = model.predict_proba(perturbed_input)[0]
+        perturbed_score = perturbed_proba[predicted_class_idx]
+        
+        # Importance is the drop in probability when feature is neutralized
+        importance = abs(baseline_score - perturbed_score)
+        importance_scores[feature] = importance
+    
+    # Normalize to sum to 1
+    total = sum(importance_scores.values())
+    if total > 0:
+        importance_scores = {k: v/total for k, v in importance_scores.items()}
+    
+    return importance_scores
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
@@ -207,8 +242,9 @@ def predict_crop():
             for i in top_indices
         ]
         
-        # Feature importance
-        feature_importance = dict(zip(feature_names, model.feature_importances_))
+        # Calculate prediction-specific feature importance
+        # Get the contributions of each feature to this specific prediction
+        feature_importance = calculate_prediction_importance(input_df, input_scaled, prediction)
         most_important = max(feature_importance.items(), key=lambda x: x[1])
         
         # Generate explanation
