@@ -70,14 +70,19 @@ def load_or_train_model():
         X_train_scaled = scaler.fit_transform(X_train)
         X_test_scaled = scaler.transform(X_test)
         
-        # Train Random Forest
+        # Train Random Forest with optimized hyperparameters for large dataset
+        print("🔄 Training Random Forest model with optimized parameters...")
         model = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=15,
-            min_samples_split=5,
-            min_samples_leaf=2,
+            n_estimators=200,        # Increased from 100 for better accuracy
+            max_depth=20,            # Increased from 15 for more complex patterns
+            min_samples_split=4,     # Decreased from 5 for better fitting
+            min_samples_leaf=2,      # Keep at 2 to prevent overfitting
+            max_features='sqrt',     # Use sqrt for better generalization
+            bootstrap=True,
+            oob_score=True,          # Out-of-bag score for validation
             random_state=42,
-            n_jobs=-1
+            n_jobs=-1,               # Use all CPU cores
+            verbose=1                # Show training progress
         )
         
         model.fit(X_train_scaled, y_train)
@@ -273,6 +278,7 @@ def predict_crop():
 def generate_explanation(crop, conditions, confidence):
     """Generate human-readable explanation"""
     explanations = {
+        # Original crops
         'rice': 'Rice thrives in high humidity and adequate rainfall with moderate NPK levels. Best grown in flooded fields.',
         'wheat': 'Wheat grows well in moderate temperatures with balanced soil nutrients. Requires well-drained soil.',
         'maize': 'Maize (corn) requires warm temperatures and moderate to high nitrogen levels. Needs good drainage.',
@@ -287,10 +293,34 @@ def generate_explanation(crop, conditions, confidence):
         'jute': 'Jute requires warm, humid climate with plenty of rainfall. Grows well in alluvial soil.',
         'mango': 'Mangoes need warm to hot temperatures with moderate rainfall. Prefers well-drained sandy loam.',
         'papaya': 'Papaya requires warm temperatures, good drainage, and rich organic soil. Fast-growing fruit tree.',
-        'pomegranate': 'Pomegranate thrives in hot, dry climates with good drainage. Drought-tolerant once established.'
+        'pomegranate': 'Pomegranate thrives in hot, dry climates with good drainage. Drought-tolerant once established.',
+        'chickpea': 'Chickpea is a drought-tolerant legume that grows well in semi-arid regions with moderate temperatures.',
+        'kidneybeans': 'Kidney beans prefer moderate temperatures and humidity with well-drained, slightly acidic soil.',
+        'pigeonpeas': 'Pigeon peas are drought-resistant legumes suitable for warm, semi-arid tropical regions.',
+        'mothbeans': 'Moth beans thrive in hot, dry climates with low rainfall. Highly drought-tolerant crop.',
+        'mungbean': 'Mung beans require warm temperatures, high humidity, and moderate rainfall. Quick-growing crop.',
+        'blackgram': 'Black gram grows well in warm, humid conditions with moderate rainfall and neutral soil.',
+        'lentil': 'Lentils are cool-season legumes that prefer moderate temperatures and well-drained soil.',
+        'watermelon': 'Watermelon needs warm temperatures, moderate humidity, and nitrogen-rich soil. Requires consistent watering.',
+        'muskmelon': 'Muskmelon thrives in warm temperatures with moderate humidity and well-drained, fertile soil.',
+        
+        # New crops
+        'barley': 'Barley is a cool-season cereal that tolerates poor soil conditions. Requires moderate rainfall and cool temperatures.',
+        'soybean': 'Soybeans are versatile legumes that fix nitrogen in soil. Need warm temperatures and moderate rainfall.',
+        'potato': 'Potatoes grow best in cool to moderate temperatures with rich, acidic soil. Require consistent moisture.',
+        'tomato': 'Tomatoes need warm temperatures, moderate humidity, and nutrient-rich soil. Require support structures.',
+        'onion': 'Onions prefer cool to moderate temperatures with well-drained soil. Need consistent moisture for bulb formation.',
+        'garlic': 'Garlic thrives in cool temperatures with well-drained, fertile soil. Requires a cold period for bulb development.',
+        'carrot': 'Carrots prefer cool temperatures and deep, loose soil. Need consistent moisture for straight root development.',
+        'cabbage': 'Cabbage grows best in cool temperatures with rich, moist soil. Benefits from consistent watering.',
+        'cauliflower': 'Cauliflower requires cool temperatures, rich soil, and consistent moisture. More demanding than cabbage.',
+        'spinach': 'Spinach is a cool-season crop that prefers rich, moist soil. Fast-growing leafy vegetable.',
+        'lettuce': 'Lettuce thrives in cool temperatures with rich, well-drained soil. Requires consistent moisture.',
+        'peas': 'Peas are cool-season legumes that fix nitrogen. Prefer moderate temperatures and well-drained soil.',
+        'sunflower': 'Sunflowers are drought-tolerant and grow well in warm temperatures. Need well-drained, fertile soil.',
     }
     
-    base_explanation = explanations.get(crop, f'{crop} is suitable for the provided conditions.')
+    base_explanation = explanations.get(crop, f'{crop.capitalize()} is suitable for the provided soil and climate conditions.')
     
     # Analyze conditions
     conditions_analysis = []

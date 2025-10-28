@@ -1,4 +1,5 @@
 /* Responsive Design Enhancements for FertiSmart */
+/* Optimized for Mobile, Tablet, PC, and TV screens */
 
 /* Viewport Configuration */
 @viewport {
@@ -6,20 +7,60 @@
   zoom: 1.0;
 }
 
-/* Base responsive typography */
+/* Base responsive typography - Mobile First */
 html {
-  font-size: 14px;
+  font-size: 14px; /* Mobile phones */
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
+/* Phones landscape / Small tablets */
 @media (min-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+/* Tablets */
+@media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
 
+/* Laptops / Small desktops */
 @media (min-width: 1024px) {
   html {
+    font-size: 16px;
+  }
+}
+
+/* Desktops */
+@media (min-width: 1280px) {
+  html {
+    font-size: 17px;
+  }
+}
+
+/* Large desktops */
+@media (min-width: 1536px) {
+  html {
     font-size: 18px;
+  }
+}
+
+/* Full HD / TVs */
+@media (min-width: 1920px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+/* 2K displays / Large TVs */
+@media (min-width: 2560px) {
+  html {
+    font-size: 22px;
   }
 }
 
@@ -268,6 +309,146 @@ html {
 }
 
 /* Desktop optimizations */
+@media (min-width: 1024px) {
+  .desktop-max-width {
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .desktop-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Large screen / TV optimizations */
+@media (min-width: 1920px) {
+  .tv-container {
+    max-width: 1800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3rem;
+  }
+  
+  .tv-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3rem;
+  }
+  
+  .tv-text {
+    font-size: 1.25rem;
+    line-height: 1.8;
+  }
+  
+  /* Larger touch targets for TV remotes */
+  .tv-button {
+    min-height: 60px;
+    min-width: 200px;
+    font-size: 1.5rem;
+    padding: 1.5rem 2.5rem;
+  }
+}
+
+/* 2K and 4K displays */
+@media (min-width: 2560px) {
+  .ultra-hd-container {
+    max-width: 2400px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 4rem;
+  }
+  
+  .ultra-hd-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4rem;
+  }
+  
+  .ultra-hd-text {
+    font-size: 1.5rem;
+    line-height: 2;
+  }
+}
+
+/* Orientation-specific styles */
+@media (orientation: portrait) {
+  .portrait-stack {
+    flex-direction: column;
+  }
+}
+
+@media (orientation: landscape) {
+  .landscape-row {
+    flex-direction: row;
+  }
+}
+
+/* Print optimization */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-friendly {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* High DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .retina-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .auto-dark-bg {
+    background-color: #1a1a1a;
+  }
+  
+  .auto-dark-text {
+    color: #f0f0f0;
+  }
+}
+
+/* Performance optimizations */
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Smooth scrolling for all devices */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Mobile-specific performance */
+@media (max-width: 767px) {
+  .mobile-optimize-image {
+    image-rendering: auto;
+  }
+  
+  .mobile-reduce-shadows {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
 @media (min-width: 1024px) {
   .desktop-optimize {
     font-size: 1.25rem;

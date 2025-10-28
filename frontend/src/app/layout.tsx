@@ -11,11 +11,29 @@ export const metadata: Metadata = {
   description: 'Data-driven soil analysis and intelligent fertilizer recommendations for modern agriculture',
   keywords: ['agriculture', 'soil analysis', 'fertilizer', 'machine learning', 'farming'],
   authors: [{ name: 'FertiSmart Team' }],
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'FertiSmart',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: 'website',
+    siteName: 'FertiSmart',
+    title: 'FertiSmart - Smart Fertilizer Recommendation System',
+    description: 'Data-driven soil analysis and intelligent fertilizer recommendations',
+  },
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({
@@ -42,10 +60,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased transition-colors duration-300`} suppressHydrationWarning>
+      <body className={`${inter.className} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased transition-colors duration-300 min-h-screen`} suppressHydrationWarning>
         <ThemeProvider>
           <Providers>
-            {children}
+            <div className="relative min-h-screen flex flex-col">
+              {children}
+            </div>
           </Providers>
         </ThemeProvider>
       </body>

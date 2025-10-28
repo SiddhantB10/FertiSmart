@@ -7,6 +7,16 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    screens: {
+      'xs': '375px',    // Small phones
+      'sm': '640px',    // Phones landscape / Small tablets
+      'md': '768px',    // Tablets
+      'lg': '1024px',   // Laptops / Small desktops
+      'xl': '1280px',   // Desktops
+      '2xl': '1536px',  // Large desktops
+      '3xl': '1920px',  // Full HD displays / TVs
+      '4xl': '2560px',  // 2K displays / Large TVs
+    },
     extend: {
       colors: {
         primary: {
